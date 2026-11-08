@@ -49,6 +49,8 @@ show collections
 
 **Question 1:** what is `_id` for? What would MongoDB do if you left it out? (Try it: insert a third product with no `_id`, then look at it in step 3.)
 
+_id: ObjectId('6af0f1a7fcfcceac7644a379')
+
 ## 3. Read
 
 ```js
@@ -59,6 +61,8 @@ db.products.find({}, { name: 1, _id: 0 })
 ```
 
 **Question 2:** what does `$gt` mean? What does the second `{ name: 1, _id: 0 }` in the last command do? (It's called a **projection**.)
+
+`$gt` means "greater than" so it matches products costing more than 1. The second it picks up thenames field and 1 means include, 0 means exclude so we only get the names
 
 ## 4. Update
 
@@ -105,10 +109,117 @@ db.products.find({ _id: 3 })
 
 **Question 4:** in a SQL database, where would the reviews go? Why is keeping them inside the product handy here?
 
+Most likely in a different table called reviews that would hava a `product_id` column pointing back to the product. It is handy here because the reviews only belong to that one product 
+
 Copy everything from your terminal (from `mongosh` to the last command) and paste it here, in a code block:
 
 ```
-paste your terminal here
+ use shopDB
+switched to db shopDB
+shopDB> db.dropDatabase()
+{ ok: 1, dropped: 'shopDB' }
+shopDB> db.products.insertOne({_id: 1, name: "Pen", Price: 1.20})
+{ acknowledged: true, insertedId: 1 }
+shopDB> db.products.insertOne({_id: 2, name: "Pencil", price: 0.80, stock: 12})
+{ acknowledged: true, insertedId: 2 }
+shopDB> show collections
+products
+shopDB> db.products.insertOne({ name: "Notebook", price: 3.50})
+{
+  acknowledged: true,
+  insertedId: ObjectId('6af0f1a7fcfcceac7644a379')
+}
+shopDB> db.products.find()
+[
+  { _id: 1, name: 'Pen', Price: 1.2 },
+  { _id: 2, name: 'Pencil', price: 0.8, stock: 12 },
+  {
+    _id: ObjectId('6af0f1a7fcfcceac7644a379'),
+    name: 'Notebook',
+    price: 3.5
+  }
+]
+shopDB> db.products.find()
+[
+  { _id: 1, name: 'Pen', Price: 1.2 },
+  { _id: 2, name: 'Pencil', price: 0.8, stock: 12 },
+  {
+    _id: ObjectId('6af0f1a7fcfcceac7644a379'),
+    name: 'Notebook',
+    price: 3.5
+  }
+]
+shopDB> db.products.find({name: "Pencil"})
+[ { _id: 2, name: 'Pencil', price: 0.8, stock: 12 } ]
+shopDB> db.products.find({price: {$gt: 1 } })
+[
+  {
+    _id: ObjectId('6af0f1a7fcfcceac7644a379'),
+    name: 'Notebook',
+    price: 3.5
+  }
+]
+shopDB> db.products.find({}, {name: 1, _id: 0})
+[ { name: 'Pen' }, { name: 'Pencil' }, { name: 'Notebook' } ]
+shopDB> db.products.updateOne({ _id: 1 }, {$set: { stock: 35 }})
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+shopDB> db.products.find({ _id: 1})
+[ { _id: 1, name: 'Pen', Price: 1.2, stock: 35 } ]
+shopDB> db.products.deleteOne({ _id: 2})
+{ acknowledged: true, deletedCount: 1 }
+shopDB> db.products.find()
+[
+  { _id: 1, name: 'Pen', Price: 1.2, stock: 35 },
+  {
+    _id: ObjectId('6af0f1a7fcfcceac7644a379'),
+    name: 'Notebook',
+    price: 3.5
+  }
+]
+shopDB> db.products.insertOne({_id: 2, name: "Pencil", price: 0.80, stock: 12})
+{ acknowledged: true, insertedId: 2 }
+shopDB> db.products.insertOne({
+|   _id: 3,
+|   name: "Eraser",
+|   price: 1.30,
+|   stock: 43,
+|   reviews: [
+|     { authorName: "Jim", rating: 4, review: "Cool Eraser" }
+|   ]
+| })
+{ acknowledged: true, insertedId: 3 }
+shopDB> db.products.updateOne({ _id: 3 }, { $push: { reviews: { authorName: "Tristan", rating: 5, review: "Erases everything, even my mistakes :)" } } })
+{
+  acknowledged: true,
+  insertedId: null,
+  matchedCount: 1,
+  modifiedCount: 1,
+  upsertedCount: 0
+}
+shopDB> db.products.find({ _id: 3})
+[
+  {
+    _id: 3,
+    name: 'Eraser',
+    price: 1.3,
+    stock: 43,
+    reviews: [
+      { authorName: 'Jim', rating: 4, review: 'Cool Eraser' },
+      {
+        authorName: 'Tristan',
+        rating: 5,
+        review: 'Erases everything, even my mistakes :)'
+      }
+    ]
+  }
+]
+
 ```
 
 Type `exit` to leave mongosh.
