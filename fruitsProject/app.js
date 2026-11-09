@@ -21,8 +21,6 @@ await Fruit.insertMany([
   { name: "Watermelon", rating: 8, review: "Sweet and includes a lot of water" },
 ]);
 
-await mango.save();
-
 console.log("Saved 3 fruits");
 
 const fruits = await Fruit.find();
