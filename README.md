@@ -292,6 +292,8 @@ Now run it a **second** time.
 
 **Question 5:** what changed the second time? Why?
 
+The second run printed one more `Apple 7` line. Every run does `new Fruit` and save which inserts a new document everytime.
+
 ## 9. Look at it in mongosh
 
 In your **second** terminal:
@@ -306,7 +308,9 @@ show collections
 db.fruits.find()
 ```
 
-**Question 6:** your model is called `Fruit`. What is the collection called? Are your fruits from Lab 5 Part 3 in there too? Why?
+**Question 6:** your model is called `Fruit`. What is the collection called? Are your fruits from Lab 5 Part 3 in there too? Why? 
+
+The collection is called `fruits`. Mongoose lowercases the model name and makes it plural. Yes the previous labs fruits are there too, since they both use the same DB.
 
 ## 10. Many at once, and a wrong type
 
@@ -330,6 +334,8 @@ await mango.save();
 ```
 
 **Question 7:** what error do you get? How does the schema protect your data? (Then delete the Mango lines.)
+
+I got `ValidationError: Cast to Number failed: value is not a valid number` the schema rating must be a number and "ten" is not a number
 
 Commit: `Part 2: Mongoose`
 
