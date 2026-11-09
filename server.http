@@ -1,5 +1,5 @@
 # Put your server's address on the next line (the same address you ssh to), then send each request.
-@base = http://your-server-address/api
+@base = https://tristan.cis251296.projects.jetstream-cloud.org/api
 
 ### 1. A random joke
 GET {{base}}/random
@@ -17,4 +17,4 @@ Content-Type: application/x-www-form-urlencoded
 text=Why do Java developers wear glasses? Because they don't C#.&type=Programming
 
 ### 5. Get the joke you just added (change 13 to the id it got)
-GET {{base}}/jokes/13
+GET {{base}}/jokes/5

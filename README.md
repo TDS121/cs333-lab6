@@ -335,7 +335,7 @@ await mango.save();
 
 **Question 7:** what error do you get? How does the schema protect your data? (Then delete the Mango lines.)
 
-I got `ValidationError: Cast to Number failed: value is not a valid number` the schema rating must be a number and "ten" is not a number
+I got `ValidationError: Cast to Number failed: value is not a valid number` the schema rating must be a number and "ten" is not a number 
 
 Commit: `Part 2: Mongoose`
 
@@ -417,6 +417,8 @@ Now go back to the terminal running `node index.js` and press **Ctrl+C**. Send t
 
 **Question 8:** what does `curl` say now? Why? What would happen to your API if you closed that terminal, or your laptop?
 
+Failed to connect to localhost port 3000 so nothing is listening on port 3000
+
 You can close the third terminal now.
 
 ---
@@ -445,6 +447,8 @@ curl http://localhost:3000/random
 
 **Question 9:** what is the `status` of `jokes`? What does the `↺` column count?
 
+The status of jok is online and the column counts how many times pm2 has had to start the app again 
+
 It works, and no terminal is busy running it.
 
 ## 16. Logs
@@ -454,6 +458,8 @@ pm2 logs jokes --lines 20
 ```
 
 **Question 10:** what's in the log? Which line of `index.js` printed it? (Press **Ctrl+C** to stop watching the log. That only stops the log, not your API.)
+
+The log has `Listening on http://localhost:3000`
 
 Other pm2 commands you'll use:
 
@@ -496,7 +502,11 @@ It should say `active (running)`. Open `http://your-server-address` in your **la
 
 **Question 11:** what page do you see? Where on the server does that page live?
 
+` https://tristan.cis251296.projects.jetstream-cloud.org/` we used this in class and this was the way to do so. I returns a joke in json format
+
 **TODO:** also try `http://your-server-address:3000/random` in your browser. **Question 12:** what happens? (Either answer is fine; just say what you see.)
+
+Just loads with no result. Port 3000 is not open.
 
 ## 19. Send /api/ to your API
 
@@ -537,6 +547,8 @@ Open `http://your-server-address/api/random` in your laptop's browser. 🎉 Your
 
 **Question 13:** the browser asked for `/api/random`, but your Express route is `/random`. Which part of the nginx setting takes `/api` off? (Hint: try it without the last `/` in `proxy_pass`, test, reload, and see what happens. Put it back after.)
 
+The trailing `/` nginx replaces the `location /api/` with `/` so `/api/random` is sent to the API as `random`
+
 ---
 
 # Part 6: Use it from your laptop 💻 LAPTOP
@@ -563,7 +575,11 @@ Send request **5** again.
 
 **Question 14:** what happened to your joke? Why? Think about Part 2: your fruits were still there after `app.js` stopped. How would MongoDB fix your jokes? (That's Lab 7.)
 
+After we restarted the jokes, the joke was gone. They live in an array inside `index.js`. MongoDB stores them on disk and keeps running seperately from my program. Saving them to MongoDB with Mongoose would fix it since POST would insert a document and GET would read it back and restart wouldnt touch it
+
 **Question 15:** in your own words, what does pm2 do, and what does nginx do? Why do we need both?
+
+pm2 is a process manager. It can start my Node app and keep it running even after i log out, restart if it crashes or server reboots. nginx is a web server that is on ports 80 and 443. It is able to take requests from the internet, serves static files and handles HTTPS. We need both as they do different jobs. Without pm2 the API dies when the terminal closes. Without nginx, nobody outside the server could reach port 3000
 
 ## Changed your code?
 
